@@ -1,10 +1,10 @@
 
         ----SOLUTIONS----
-**kelime** veya __kelime__
-**Bu metin kalın yazılacak**
 
-**1. Find the total spending of each customer.**
-*SELECT C.customer_id,* 
+
+1. Find the total spending of each customer.
+
+SELECT C.customer_id,* 
 	   __C.first_name,__
 	   C.last_name , 
 SUM(total) Top_Invoice  
