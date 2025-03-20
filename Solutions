@@ -87,3 +87,39 @@ FROM Track
 WHERE  
 milliseconds > (SELECT AVG(milliseconds) FROM Track) 
 ORDER BY milliseconds DESC 
+
+8.List artist names and album titles, including artists who do not have any albums.
+SELECT A.title,
+	Art.name 
+FROM Album A
+RIGHT JOIN Artist Art ON A.artist_id=Art.artist_id
+
+9. Find customers with no sales and their responsible persons.
+SELECT  C.first_name AS Customer_Name,
+	E.first_name AS Rep_Name FROM 
+Customer C
+LEFT JOIN Emplyoee E ON E.employee_id=C.support_rep_id
+LEFT JOIN Invoice I ON I.customer_id=C.customer_id
+WHERE I.customer_id IS NULL
+
+10. Find customers with no album purchases and their spending.
+SELECT C.first_name,
+	SUM(I.total) AS Total_Invoice
+FROM Track T
+RIGHT JOIN  Invoice_line Inv ON Inv.track_id=t.track_id
+RIGHT JOIN Invoice I ON I.invoice_id=Inv.invoice_id
+RIGHT JOIN Customer C ON C.customer_id=I.customer_id
+GROUP BY C.first_name
+HAVING SUM(I.total) IS NULL
+
+
+
+
+
+
+
+
+
+
+
+
