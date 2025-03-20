@@ -2,7 +2,7 @@
         ----SOLUTIONS----
 
 
-1. Find the total spending of each customer. 
+**1. Find the total spending of each customer. **
 SELECT C.customer_id, 
 	   C.first_name, 
 	   C.last_name , 
