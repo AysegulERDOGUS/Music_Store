@@ -1,6 +1,6 @@
 
         ----SOLUTIONS----
-
+**kelime** veya __kelime__
 
 **1. Find the total spending of each customer.**
 *SELECT C.customer_id,* 
