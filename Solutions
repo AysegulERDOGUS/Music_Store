@@ -62,7 +62,7 @@ ON C.customer_id=I.customer_id
 GROUP BY I.customer_id,C.first_name,C.last_name  
 ORDER BY Toplam  DESC 
 
-5. List the email addresses, first names, last names, and genres of rock music listeners, sorted by email address in ascending order 
+7. List the email addresses, first names, last names, and genres of rock music listeners, sorted by email address in ascending order 
 
 SELECT DISTINCT G.name AS type, 
 		C.first_name, 
@@ -76,7 +76,7 @@ JOIN Customer C ON C.customer_id=Inv.customer_id
 WHERE G.name = 'Rock' 
 ORDER BY C.email ASC 
 
-6. Write a query that returns the artist name and total number of tracks for the top 10 rock bands 
+8. Write a query that returns the artist name and total number of tracks for the top 10 rock bands 
 
 SELECT TOP 10 Art.name ,  
 	   COUNT(T.track_id) AS Unity 
@@ -88,7 +88,7 @@ WHERE G.name LIKE '%Rock%'
 GROUP BY Art.name 
 ORDER BY Unity DESC 
 
-7. Write a query that returns the names and durations in milliseconds of songs that are longer than the average song duration, sorted from longest to shortest. 
+9. Write a query that returns the names and durations in milliseconds of songs that are longer than the average song duration, sorted from longest to shortest. 
 
 SELECT name as Track_Name, 
 	   milliseconds  
@@ -97,14 +97,14 @@ WHERE
 milliseconds > (SELECT AVG(milliseconds) FROM Track) 
 ORDER BY milliseconds DESC 
 
-8.List artist names and album titles, including artists who do not have any albums.
+10.List artist names and album titles, including artists who do not have any albums.
 
 SELECT A.title,
 	Art.name 
 FROM Album A
 RIGHT JOIN Artist Art ON A.artist_id=Art.artist_id
 
-9. Find customers with no sales and their responsible persons.
+11. Find customers with no sales and their responsible persons.
 
 SELECT  C.first_name AS Customer_Name,
 	E.first_name AS Rep_Name FROM 
@@ -113,7 +113,7 @@ LEFT JOIN Emplyoee E ON E.employee_id=C.support_rep_id
 LEFT JOIN Invoice I ON I.customer_id=C.customer_id
 WHERE I.customer_id IS NULL
 
-10. Find customers with no album purchases and their spending.
+12. Find customers with no album purchases and their spending.
 
 SELECT C.first_name,
 	SUM(I.total) AS Total_Invoice
