@@ -5,7 +5,7 @@
 1. Find the total spending of each customer.
 
 SELECT C.customer_id,* 
-	   __C.first_name,__
+	   C.first_name,
 	   C.last_name , 
 SUM(total) Top_Invoice  
 FROM Customer C 
@@ -57,8 +57,7 @@ SELECT TOP 1 I.customer_id ,
 	   C.last_name, 
 	   SUM(I.Total)as Toplam  
 FROM Invoice I 
-JOIN Customer C 
-ON C.customer_id=I.customer_id 
+JOIN Customer C ON C.customer_id=I.customer_id 
 GROUP BY I.customer_id,C.first_name,C.last_name  
 ORDER BY Toplam  DESC 
 
@@ -93,8 +92,7 @@ ORDER BY Unity DESC
 SELECT name as Track_Name, 
 	   milliseconds  
 FROM Track 
-WHERE  
-milliseconds > (SELECT AVG(milliseconds) FROM Track) 
+WHERE  milliseconds > (SELECT AVG(milliseconds) FROM Track) 
 ORDER BY milliseconds DESC 
 
 10.List artist names and album titles, including artists who do not have any albums.
