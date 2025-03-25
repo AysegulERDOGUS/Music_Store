@@ -87,7 +87,8 @@ WHERE G.name LIKE '%Rock%'
 GROUP BY Art.name 
 ORDER BY Unity DESC 
 
-9. Write a query that returns the names and durations in milliseconds of songs that are longer than the average song duration, sorted from longest to shortest. 
+9. Write a query that returns the names and durations in milliseconds of songs that are longer than the average song duration,
+sorted from longest to shortest. 
 
 SELECT name as Track_Name, 
 	   milliseconds  
@@ -121,6 +122,55 @@ RIGHT JOIN Invoice I ON I.invoice_id=Inv.invoice_id
 RIGHT JOIN Customer C ON C.customer_id=I.customer_id
 GROUP BY C.first_name
 HAVING SUM(I.total) IS NULL
+
+13. Find the highest-earning and no-earning artists.
+1. SOLUTION
+
+SELECT * FROM( SELECT  A.artist_id, A.name,
+			SUM(I.unit_price * I.quantity) AS Total
+			FROM Artist A
+			LEFT JOIN Album Al ON A.artist_id = Al.artist_id
+			LEFT JOIN Track T ON T.album_id = Al.album_id
+			LEFT JOIN Invoice_line I ON I.track_id = T.track_id
+			GROUP BY A.artist_id, A.name
+			) AS New_Table
+WHERE Total IS NULL 
+		OR Total=(SELECT TOP 1  SUM(I.unit_price * I.quantity) AS Total
+					FROM Artist A
+					LEFT JOIN Album Al ON A.artist_id = Al.artist_id
+					LEFT JOIN Track T ON T.album_id = Al.album_id
+					LEFT JOIN Invoice_line I ON I.track_id = T.track_id
+					GROUP BY A.artist_id, A.name
+					ORDER BY Total DESC)
+ORDER BY Total DESC
+
+2.SOLUTION
+
+WITH NEW_TABLE AS (
+    SELECT A.artist_id, A.name,
+           SUM(I.unit_price * I.quantity) AS Total
+    FROM Artist A
+    LEFT JOIN Album Al ON A.artist_id = Al.artist_id
+    LEFT JOIN Track T ON T.album_id = Al.album_id
+    LEFT JOIN Invoice_line I ON I.track_id = T.track_id
+    GROUP BY A.artist_id, A.name
+)
+SELECT * 
+FROM NEW_TABLE
+WHERE Total = (SELECT MAX(Total) FROM NEW_TABLE) OR Total IS NULL
+ORDER BY Total DESC
+
+14. List the names, invoice dates, and total amounts of customers who have invoices.
+
+SELECT C.first_name,C.last_name,I.invoice_date,
+	SUM(I.total) AS Total_Invoice
+FROM Customer C
+JOIN Invoice I ON I.customer_id=C.customer_id
+GROUP BY C.first_name,I.invoice_date,C.last_name
+ORDER BY C.first_name , I.invoice_date DESC
+
+
+
 
 
 
