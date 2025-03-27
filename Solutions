@@ -1,100 +1,105 @@
 
         ----SOLUTIONS----
 
-
 1. Find the total spending of each customer.
 
-SELECT C.customer_id,* 
+SELECT C.customer_id,
 	   C.first_name,
-	   C.last_name , 
-SUM(total) Top_Invoice  
-FROM Customer C 
-JOIN Invoice I ON I.customer_id=C.customer_id  
-GROUP BY  
-	  C.customer_id ,  
-	  C.first_name, 
-	  C.last_name 
+	   C.last_name ,
+	   SUM(total) Top_Invoice 
+FROM Customer C
+JOIN Invoice I ON I.customer_id=C.customer_id 
+GROUP BY 
+	C.customer_id , 
+	C.first_name,
+	C.last_name
 
-2. List the names of all artists who have released an album. 
+2. List the names of all artists who have released an album.
 
-SELECT Art.name  
-FROM Artist Art 
-JOIN Album A ON A.artist_id=Art.artist_id 
-GROUP BY  Art.name 
-HAVING COUNT(A.album_id)=1 
+SELECT Art.name 
+FROM Artist Art
+JOIN Album A ON A.artist_id=Art.artist_id
+GROUP BY  Art.name
+HAVING COUNT(A.album_id)=1
 
-3. List songs of a specific genre along with their album titles 
+3. List songs of a specific genre along with their album titles
 
-SELECT DISTINCT G.name, 
-		A.title 
-FROM Genre G 
-JOIN Track T ON G.genre_id=T.genre_id 
-JOIN Album A ON T.album_id=A.album_id 
-WHERE G.name LIKE '%Blues%' 
+SELECT DISTINCT G.name,
+   A.title
+FROM Genre G
+JOIN Track T ON G.genre_id=T.genre_id
+JOIN Album A ON T.album_id=A.album_id
+WHERE G.name LIKE '%Blues%'
 
-4. List all playlists that contain a specific song. 
+4. List all playlists that contain a specific song.
 
-SELECT PL.playlist_id, 
-	T.name as Track_Name , 
-	PL.name as List_Name 
-FROM Track T 
-JOIN playlist_track P ON T.track_id=P.track_id 
-JOIN playlist PL ON PL.playlist_id=P.playlist_id 
-WHERE T.track_id=222 
+SELECT PL.playlist_id,
+	   T.name as Track_Name ,
+	   PL.name as List_Name
+FROM Track T
+JOIN playlist_track P ON T.track_id=P.track_id
+JOIN playlist PL ON PL.playlist_id=P.playlist_id
+WHERE T.track_id=222
 
-5. Find the total revenue generated from each invoice by country. 
+5. Find the total revenue generated from each invoice by country.
 
-SELECT billing_country,  
-	SUM(total) AS Total_Invoice 
-FROM Invoice I 
-GROUP BY billing_country 
-ORDER BY Total_Invoice DESC 
+SELECT billing_country, 
+	   SUM(total) AS Total_Invoice
+FROM Invoice I
+GROUP BY billing_country
+ORDER BY Total_Invoice DESC
 
-6. Write a query that returns the person who has spent the most money. 
+6. Write a query that returns the person who has spent the most money.
 
-SELECT TOP 1 I.customer_id ,
+SELECT TOP 1 I.customer_id ,C.first_name,C.last_name,
+	    SUM(I.Total)as Toplam 
+FROM Invoice I
+JOIN Customer C
+	ON C.customer_id=I.customer_id
+GROUP BY I.customer_id,C.first_name,C.last_name 
+ORDER BY Toplam  DESC
+
+7. List the email addresses, first names, last names, and genres of rock music listeners, sorted by email address in ascending order
+
+SELECT DISTINCT G.name AS type,
 	   C.first_name,
-	   C.last_name, 
-	   SUM(I.Total)as Toplam  
-FROM Invoice I 
-JOIN Customer C ON C.customer_id=I.customer_id 
-GROUP BY I.customer_id,C.first_name,C.last_name  
-ORDER BY Toplam  DESC 
+	   C.last_name,
+	   C.email 
+FROM Genre G
+JOIN Track T ON G.genre_id=T.genre_id
+JOIN Invoice_line I ON I.track_id= T.track_id
+JOIN Invoice Inv ON Inv.invoice_id=I.invoice_id
+JOIN Customer C ON C.customer_id=Inv.customer_id
+WHERE G.name = 'Rock'
+ORDER BY C.email ASC
 
-7. List the email addresses, first names, last names, and genres of rock music listeners, sorted by email address in ascending order 
+8. Write a query that returns the artist name and total number of tracks for the top 10 rock bands
 
-SELECT DISTINCT G.name AS type, 
-		C.first_name, 
-		C.last_name, 
-		C.email  
-FROM Genre G 
-JOIN Track T ON G.genre_id=T.genre_id 
-JOIN Invoice_line I ON I.track_id= T.track_id 
-JOIN Invoice Inv ON Inv.invoice_id=I.invoice_id 
-JOIN Customer C ON C.customer_id=Inv.customer_id 
-WHERE G.name = 'Rock' 
-ORDER BY C.email ASC 
+SELECT TOP 10 Art.name , 
+	   COUNT(T.track_id) AS Unity
+FROM Genre G
 
-8. Write a query that returns the artist name and total number of tracks for the top 10 rock bands 
+JOIN Track T ON G.genre_id=T.genre_id
+JOIN Album A ON A.album_id=T.album_id
+JOIN Artist Art ON Art.artist_id= A.artist_id
 
-SELECT TOP 10 Art.name ,  
-	   COUNT(T.track_id) AS Unity 
-FROM Genre G 
-JOIN Track T ON G.genre_id=T.genre_id 
-JOIN Album A ON A.album_id=T.album_id 
-JOIN Artist Art ON Art.artist_id= A.artist_id 
-WHERE G.name LIKE '%Rock%' 
-GROUP BY Art.name 
-ORDER BY Unity DESC 
+WHERE G.name LIKE '%Rock%'
+GROUP BY Art.name
+ORDER BY Unity DESC
 
-9. Write a query that returns the names and durations in milliseconds of songs that are longer than the average song duration,
-sorted from longest to shortest. 
+9. Write a query that returns the names and durations of songs longer than the avg. song duration, sorted in ascending order.
+It should include artist names and album titles, and artists without albums should also be included.
 
-SELECT name as Track_Name, 
-	   milliseconds  
-FROM Track 
-WHERE  milliseconds > (SELECT AVG(milliseconds) FROM Track) 
-ORDER BY milliseconds DESC 
+SELECT DISTINCT Art.name,
+		   A.title ,
+		   T.milliseconds
+FROM Track T
+RIGHT JOIN Album A ON A.album_id=T.album_id
+RIGHT JOIN Artist Art ON Art.artist_id=A.artist_id
+WHERE  
+	T.milliseconds > (SELECT AVG(milliseconds) FROM Track)
+	OR T.milliseconds IS NULL
+ORDER BY T.milliseconds DESC
 
 10.List artist names and album titles, including artists who do not have any albums.
 
@@ -115,7 +120,7 @@ WHERE I.customer_id IS NULL
 12. Find customers with no album purchases and their spending.
 
 SELECT C.first_name,
-	SUM(I.total) AS Total_Invoice
+	   SUM(I.total) AS Total_Invoice
 FROM Track T
 RIGHT JOIN  Invoice_line Inv ON Inv.track_id=t.track_id
 RIGHT JOIN Invoice I ON I.invoice_id=Inv.invoice_id
@@ -124,6 +129,7 @@ GROUP BY C.first_name
 HAVING SUM(I.total) IS NULL
 
 13. Find the highest-earning and no-earning artists.
+
 1. SOLUTION
 
 SELECT * FROM( SELECT  A.artist_id, A.name,
@@ -169,6 +175,27 @@ JOIN Invoice I ON I.customer_id=C.customer_id
 GROUP BY C.first_name,I.invoice_date,C.last_name
 ORDER BY C.first_name , I.invoice_date DESC
 
+15.The most popular genre is the one with the highest sales. Write a query that returns the most popular genre, the number of sales, and the total amount for each country.
+
+WITH New_Table AS (
+    SELECT  
+        G.genre_id,
+        G.name,
+        I.billing_country AS Country,
+        COUNT(G.genre_id) AS Score,
+		SUM(Inv.unit_price*Inv.quantity) AS Total_Pay
+    FROM Invoice_line Inv
+    JOIN Invoice I ON Inv.invoice_id = I.invoice_id
+    JOIN Track T ON T.track_id = Inv.track_id
+    JOIN Genre G ON G.genre_id = T.genre_id
+    GROUP BY I.billing_country, G.genre_id, G.name
+)
+SELECT Country,
+	   MAX(Score) AS Unit,
+	   MAX(Total_Pay) AS Pay
+FROM New_Table
+GROUP BY Country
+ORDER BY Pay DESC
 
 
 
