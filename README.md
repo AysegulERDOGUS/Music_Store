@@ -7,7 +7,7 @@
 
 In this project, the Music Store dataset was analyzed using SQL. The goal was to find answers to some analysis questions. Since the dataset was already clean and ready for analysis, no data cleaning was needed. The project focused only on analysis.
 
-📌 Scope of Analysis
+📌 Content of Analysis
 
 
 In this project, SQL queries were used to answer questions such as:
