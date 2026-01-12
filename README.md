@@ -12,10 +12,10 @@ In this project, the Music Store dataset was analyzed using SQL. The goal was to
 
 In this project, SQL queries were used to answer questions such as:
 
-  - Who are the most listened rock artists,
-  - Which users listened to rock music,
-  - Which artists have the highest and lowest income,
-  - Which playlists include a song
+      * Who are the most listened rock artists,
+      * Which users listened to rock music,
+      * Which artists have the highest and lowest income,
+      * Which playlists include a song
 
 ✨ Conclusion
 
